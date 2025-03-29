@@ -4,6 +4,14 @@ vim.g.maplocalleader = " "
 vim.o.number = true
 vim.opt.termguicolors = true
 
+vim.diagnostic.config({
+  virtual_text = true,  -- Show errors inline
+  signs = true,         -- Show errors in the sign column
+  underline = true,     -- Underline errors
+  update_in_insert = false, -- Don't update errors while typing
+  severity_sort = true, -- Sort errors by severity
+})
+
 -- Ensure lazy.nvim is installed
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -24,43 +32,70 @@ require("lazy").setup({
     { "nvim-tree/nvim-web-devicons", opts = {} },
 
     {
-    "williamboman/mason.nvim",
-    config = function()
-      require("mason").setup()
-    end,
-  },
-  {
-    "williamboman/mason-lspconfig.nvim",
-    config = function()
-      require("mason-lspconfig").setup({
-        ensure_installed = { "angularls" },
-      })
-    end,
-    dependencies = {
-      "mason.nvim",
+        "williamboman/mason.nvim",
+        config = function()
+            require("mason").setup()
+        end,
     },
-  },
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      local lspconfig = require("lspconfig")
-      lspconfig.angularls.setup({
-        root_dir = lspconfig.util.root_pattern("angular.json"),
-        settings = {
-          angular = {
-            languageService = {
-              enable = true,
-            },
-          },
+    {
+        "williamboman/mason-lspconfig.nvim",
+        config = function()
+            require("mason-lspconfig").setup({
+                ensure_installed = { "angularls", "ts_ls" }, -- Use ts_ls instead of tsserver
+            })
+        end,
+        dependencies = {
+            "mason.nvim",
         },
-      })
-    end,
-    dependencies = {
-      "mason-lspconfig.nvim",
-      "mason.nvim",
     },
-  },
+    {
+        "neovim/nvim-lspconfig",
+        config = function()
+            local lspconfig = require("lspconfig")
 
+            -- Setup Angular Language Server (angularls)
+            lspconfig.angularls.setup({
+		    
+                -- cmd = { "/home/akila/.local/share/nvim/mason/packages/angular-language-server", "--stdio" },
+		cmd = { 
+    			"/home/akila/.local/share/nvim/mason/packages/angular-language-server/node_modules/.bin/ngserver", 
+    			"--stdio" 
+  		},
+                root_dir = lspconfig.util.root_pattern("angular.json"),
+                settings = {
+                    angular = {
+                        languageService = {
+                            enable = true,
+                        },
+                    },
+                },
+            })
+
+            -- Setup TypeScript Language Server (ts_ls)
+            lspconfig.ts_ls.setup({
+                -- cmd = { "/home/akila/.local/share/nvim/mason/packages/typescript-language-server", "--stdio" },
+                root_dir = lspconfig.util.root_pattern("tsconfig.json", "package.json", "jsconfig.json"),
+                settings = {
+                    typescript = {
+                        inlayHints = {
+                            includeInlayParameterNameHints = "all",
+                            includeInlayFunctionLikeReturnTypeHints = true,
+                        },
+                    },
+                },
+            })
+        end,
+        dependencies = {
+            "mason-lspconfig.nvim",
+            "mason.nvim",
+        },
+    },
+    {
+        "folke/trouble.nvim",
+        config = function()
+            require("trouble").setup({})
+        end,
+    },
     -- File Explorer (nvim-tree)
     {
         "nvim-tree/nvim-tree.lua",
@@ -233,6 +268,7 @@ require("lazy").setup({
 
     -- Comment plugin for code commenting
     { "numToStr/Comment.nvim" },
+
     -- Autocompletion (nvim-cmp)
     {
         "hrsh7th/nvim-cmp",
@@ -299,7 +335,6 @@ require("catppuccin").setup({
         properties = {},
         types = {},
         operators = {},
-        -- miscs = {}, -- Uncomment to turn off hard-coded styles
     },
     color_overrides = {},
     custom_highlights = {},
@@ -319,3 +354,4 @@ require("catppuccin").setup({
 
 -- setup must be called before loading
 vim.cmd.colorscheme "catppuccin"
+

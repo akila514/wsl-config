@@ -20,3 +20,4 @@ vim.keymap.set('n', '<leader>t', ':term<CR>', { desc = 'Toggle Terminal' })
 vim.keymap.set('n', '<leader>ts', ':split | term<CR>', { desc = 'Horizontal Split Terminal' })
 vim.keymap.set('n', '<leader>td', ':vsplit | term<CR>', { desc = 'Vertical Split Terminal' })
 
+
