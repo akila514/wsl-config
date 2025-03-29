@@ -57,10 +57,10 @@ require("lazy").setup({
             lspconfig.angularls.setup({
 		    
                 -- cmd = { "/home/akila/.local/share/nvim/mason/packages/angular-language-server", "--stdio" },
-		cmd = { 
-    			"/home/akila/.local/share/nvim/mason/packages/angular-language-server/node_modules/.bin/ngserver", 
-    			"--stdio" 
-  		},
+		-- cmd = { 
+    		-- 	"/home/akila/.local/share/nvim/mason/packages/angular-language-server/node_modules/.bin/ngserver", 
+    		-- 	"--stdio" 
+  		-- },
                 root_dir = lspconfig.util.root_pattern("angular.json"),
                 settings = {
                     angular = {
@@ -154,55 +154,92 @@ require("lazy").setup({
             })
         end,
     },
+{
+    'akinsho/bufferline.nvim',
+    requires = 'nvim-tree/nvim-web-devicons',
+    config = function()
+        require('bufferline').setup {
+            options = {
+                numbers = "none", -- Disable numbers in the tabline
+                close_command = "bdelete! %d", -- Command to close buffer
+                right_mouse_command = "bdelete! %d",
+                left_mouse_command = "buffer %d", -- Switch to buffer on left click
+                show_buffer_icons = true,
+                show_buffer_close_icons = true,
+                show_tab_indicators = true,
+                persist_buffer_sort = true,
+                separator_style = "thin", -- Slanted separator style
+                always_show_bufferline = true, -- Always show bufferline
+            },
+        }
+    end
+}
+    ,
 
     -- Status Line (lualine)
-    {
-        "nvim-lualine/lualine.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require('lualine').setup {
-                options = {
-                    icons_enabled = true,
-                    theme = 'auto',
-                    component_separators = { left = '', right = '' },
-                    section_separators = { left = '', right = '' },
-                    disabled_filetypes = {
-                        statusline = {},
-                        winbar = {},
+{
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+        require('lualine').setup {
+            options = {
+                icons_enabled = true,
+                theme = {
+                    normal = {
+                        a = { fg = '#cdd6f4', bg = '#181825' },  -- Background dark, foreground light for normal state
+                        b = { fg = '#f5e0dc', bg = '#313244' },  -- Light peach background, dark text for buffer section
+                        c = { fg = '#f5e0dc', bg = '#181825' },  -- Background dark, light text for the section
                     },
-                    ignore_focus = {},
-                    always_divide_middle = true,
-                    always_show_tabline = true,
-                    globalstatus = false,
-                    refresh = {
-                        statusline = 100,
-                        tabline = 100,
-                        winbar = 100,
+                    inactive = {
+                        a = { fg = '#cdd6f4', bg = '#1e1e2e' },  -- Same as normal, keeping it dark
+                        b = { fg = '#f5e0dc', bg = '#313244' },
+                        c = { fg = '#f5e0dc', bg = '#1e1e2e' },
                     },
                 },
-                sections = {
-                    lualine_a = {'mode'},
-                    lualine_b = {'branch', 'diff', 'diagnostics'},
-                    lualine_c = {'filename'},
-                    lualine_x = {'encoding', 'fileformat', 'filetype'},
-                    lualine_y = {'progress'},
-                    lualine_z = {'location'},
+                component_separators = { left = '', right = '' },
+                section_separators = { left = '', right = '' },
+                disabled_filetypes = {
+                    statusline = {},
+                    winbar = {},
                 },
-                inactive_sections = {
-                    lualine_a = {},
-                    lualine_b = {},
-                    lualine_c = {'filename'},
-                    lualine_x = {'location'},
-                    lualine_y = {},
-                    lualine_z = {},
+                ignore_focus = {},
+                always_divide_middle = true,
+                always_show_tabline = true,
+                globalstatus = false,
+                refresh = {
+                    statusline = 100,
+                    tabline = 100,
+                    winbar = 100,
                 },
-                tabline = {},
-                winbar = {},
-                inactive_winbar = {},
-                extensions = {},
-            }
-        end,
-    },
+            },
+            sections = {
+                lualine_a = {'mode'},
+                lualine_b = {'branch', 'diff', 'diagnostics'},
+                lualine_c = {'filename'},
+                lualine_x = {'encoding', 'fileformat', 'filetype'},
+                lualine_y = {'progress'},
+                lualine_z = {'location'},
+            },
+            inactive_sections = {
+                lualine_a = {},
+                lualine_b = {},
+                lualine_c = {'filename'},
+                lualine_x = {'location'},
+                lualine_y = {},
+                lualine_z = {},
+            },
+            tabline = {
+                lualine_a = { 'buffers' },  -- Shows opened buffers
+                lualine_b = { 'tabs' },     -- Tabs section
+                lualine_c = { 'filetype' },
+            },
+            winbar = {},
+            inactive_winbar = {},
+        }
+    end,
+}
+
+    ,
 
     -- Theme (VSCode)
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
