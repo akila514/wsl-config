@@ -22,6 +22,44 @@ require("lazy").setup({
     -- File Icons
     { "nvim-tree/nvim-web-devicons", opts = {} },
 
+    {
+    "williamboman/mason.nvim",
+    config = function()
+      require("mason").setup()
+    end,
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    config = function()
+      require("mason-lspconfig").setup({
+        ensure_installed = { "angularls" },
+      })
+    end,
+    dependencies = {
+      "mason.nvim",
+    },
+  },
+  {
+    "neovim/nvim-lspconfig",
+    config = function()
+      local lspconfig = require("lspconfig")
+      lspconfig.angularls.setup({
+        root_dir = lspconfig.util.root_pattern("angular.json"),
+        settings = {
+          angular = {
+            languageService = {
+              enable = true,
+            },
+          },
+        },
+      })
+    end,
+    dependencies = {
+      "mason-lspconfig.nvim",
+      "mason.nvim",
+    },
+  },
+
     -- File Explorer (nvim-tree)
     {
         "nvim-tree/nvim-tree.lua",
@@ -130,68 +168,53 @@ require("lazy").setup({
         end,
     },
 
-    -- Theme (Everforest)
-    -- {
-      --  "sainnhe/everforest",
-        --lazy = false, -- Load on startup
-       -- priority = 1000, -- Ensure it loads first
-        --config = function()
-         --   vim.cmd("colorscheme everforest") -- Set theme
-        --end,
-    --},
-    {
-	"Mofiqul/vscode.nvim",
-	lazy = false,
-	priority = 1000,
-	config = function()
-		vim.cmd("colorscheme vscode")
-	end,
-    },
+    -- Theme (VSCode)
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
 
     -- Telescope
     {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.8',
         dependencies = { 'nvim-lua/plenary.nvim' }
-    }, 
-    
+    },
+
+    -- Neorg for notes
     {
-      "nvim-neorg/neorg",
-      lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
-      version = "*", -- Pin Neorg to the latest stable release
-      config = function()
-        require("neorg").setup {
-          load = {
-            ["core.defaults"] = {},
-            ["core.concealer"] = {},
-            ["core.dirman"] = {
-              config = {
-                workspaces = {
-                  notes = "~/notes",
+        "nvim-neorg/neorg",
+        lazy = false, 
+        version = "*",
+        config = function()
+            require("neorg").setup {
+                load = {
+                    ["core.defaults"] = {},
+                    ["core.concealer"] = {},
+                    ["core.dirman"] = {
+                        config = {
+                            workspaces = {
+                                notes = "~/notes",
+                            },
+                            default_workspace = "notes",
+                        },
+                    },
                 },
-                default_workspace = "notes",
-              },
-            },
-          },
-        }
-        vim.wo.foldlevel = 99
-        vim.wo.conceallevel = 2
-      end,
+            }
+            vim.wo.foldlevel = 99
+            vim.wo.conceallevel = 2
+        end,
     },
 
     -- Git Signs
     { "lewis6991/gitsigns.nvim" },
 
-    -- Treesitter
+    -- Treesitter setup
     {
         "nvim-treesitter/nvim-treesitter",
-        run = ":TSUpdate", -- Automatically install parsers
+        run = ":TSUpdate",
         config = function()
             require'nvim-treesitter.configs'.setup {
                 ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "javascript", "typescript", "html", "css" },
                 sync_install = false,
                 auto_install = true,
-                ignore_install = { },
                 highlight = {
                     enable = true,
                     disable = { "c", "rust" },
@@ -202,43 +225,13 @@ require("lazy").setup({
                             return true
                         end
                     end,
-                    additional_vim_regex_highlighting = false,
                 },
             }
         end,
     },
-    {
-    'numToStr/Comment.nvim',
-    opts = {
-        -- add any options here
-    }
-    },
-     {
-        "neovim/nvim-lspconfig",
-        config = function()
-            local lspconfig = require('lspconfig')
 
-            -- TypeScript and JavaScript LSP (ts_ls)
-            lspconfig.ts_ls.setup({
-                on_attach = function(client, bufnr)
-                    client.resolved_capabilities.document_formatting = true
-                end,
-                settings = {
-                    ts_ls = {
-                        enable = true,
-                    },
-                }
-            })
-
-            -- Angular LSP (angularls)
-            lspconfig.angularls.setup({
-                on_attach = function(client, bufnr)
-                    -- Angular-specific LSP configurations
-                end,
-            })
-        end
-    },
-    
+    -- Comment plugin for code commenting
+    { "numToStr/Comment.nvim" },
     -- Autocompletion (nvim-cmp)
     {
         "hrsh7th/nvim-cmp",
@@ -273,3 +266,55 @@ require("lazy").setup({
         end
     },
 })
+
+-- Set up Catppuccin theme
+require("catppuccin").setup({
+    flavour = "auto", -- latte, frappe, macchiato, mocha
+    background = { -- :h background
+        light = "latte",
+        dark = "mocha",
+    },
+    transparent_background = false, -- disables setting the background color.
+    show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+    term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
+    dim_inactive = {
+        enabled = false, -- dims the background color of inactive window
+        shade = "dark",
+        percentage = 0.15, -- percentage of the shade to apply to the inactive window
+    },
+    no_italic = false, -- Force no italic
+    no_bold = false, -- Force no bold
+    no_underline = false, -- Force no underline
+    styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
+        comments = { "italic" }, -- Change the style of comments
+        conditionals = { "italic" },
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+        operators = {},
+        -- miscs = {}, -- Uncomment to turn off hard-coded styles
+    },
+    color_overrides = {},
+    custom_highlights = {},
+    default_integrations = true,
+    integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        treesitter = true,
+        notify = false,
+        mini = {
+            enabled = true,
+            indentscope_color = "",
+        },
+    },
+})
+
+-- setup must be called before loading
+vim.cmd.colorscheme "catppuccin"
