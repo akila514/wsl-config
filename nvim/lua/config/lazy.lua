@@ -2,6 +2,7 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.o.number = true
+vim.opt.termguicolors = true
 
 -- Ensure lazy.nvim is installed
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -74,7 +75,7 @@ require("lazy").setup({
                 filters = { dotfiles = true },
                 actions = {
                     open_file = {
-                        quit_on_open = true, -- Close the tree when opening a file
+                        quit_on_open = false, -- Close the tree when opening a file
                         resize_window = true, -- Resize the window to fit the file
                     },
                 },
