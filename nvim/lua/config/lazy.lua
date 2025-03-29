@@ -1,6 +1,7 @@
 -- Set leader key early
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.o.number = true
 
 -- Ensure lazy.nvim is installed
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -130,13 +131,21 @@ require("lazy").setup({
     },
 
     -- Theme (Everforest)
+    -- {
+      --  "sainnhe/everforest",
+        --lazy = false, -- Load on startup
+       -- priority = 1000, -- Ensure it loads first
+        --config = function()
+         --   vim.cmd("colorscheme everforest") -- Set theme
+        --end,
+    --},
     {
-        "sainnhe/everforest",
-        lazy = false, -- Load on startup
-        priority = 1000, -- Ensure it loads first
-        config = function()
-            vim.cmd("colorscheme everforest") -- Set theme
-        end,
+	"Mofiqul/vscode.nvim",
+	lazy = false,
+	priority = 1000,
+	config = function()
+		vim.cmd("colorscheme vscode")
+	end,
     },
 
     -- Telescope
@@ -145,6 +154,30 @@ require("lazy").setup({
         tag = '0.1.8',
         dependencies = { 'nvim-lua/plenary.nvim' }
     }, 
+    
+    {
+      "nvim-neorg/neorg",
+      lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
+      version = "*", -- Pin Neorg to the latest stable release
+      config = function()
+        require("neorg").setup {
+          load = {
+            ["core.defaults"] = {},
+            ["core.concealer"] = {},
+            ["core.dirman"] = {
+              config = {
+                workspaces = {
+                  notes = "~/notes",
+                },
+                default_workspace = "notes",
+              },
+            },
+          },
+        }
+        vim.wo.foldlevel = 99
+        vim.wo.conceallevel = 2
+      end,
+    },
 
     -- Git Signs
     { "lewis6991/gitsigns.nvim" },
