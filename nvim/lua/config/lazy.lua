@@ -5,12 +5,35 @@ vim.o.number = true
 vim.opt.termguicolors = true
 
 vim.diagnostic.config({
-	virtual_text = true, -- Show errors inline
-	signs = true, -- Show errors in the sign column
-	underline = true, -- Underline errors
-	update_in_insert = false, -- Don't update errors while typing
-	severity_sort = true, -- Sort errors by severity
+	virtual_text = false,
+	signs = {
+		active = true, -- Enable signs (can be omitted since `signs = {...}` implies it)
+		values = {
+			{ name = "DiagnosticSignError", text = "✘" },
+			{ name = "DiagnosticSignWarn", text = "⚠" },
+			{ name = "DiagnosticSignInfo", text = "ℹ" },
+			{ name = "DiagnosticSignHint", text = "➤" },
+		},
+	},
+	underline = true, -- Underline code with diagnostics
+	update_in_insert = false, -- Don’t update diagnostics while typing
+	severity_sort = true, -- Sort by severity (errors first)
+	float = {
+		wrap = true, -- Wrap text in the float
+		max_width = 80, -- Limit width for readability
+		border = "single", -- Add a border for clarity
+		source = "always", -- Show diagnostic source
+		focusable = false, -- Prevent focus on float
+	},
 })
+
+-- Show diagnostic float on CursorHold
+vim.api.nvim_create_autocmd("CursorHold", {
+	callback = function()
+		vim.diagnostic.open_float(nil, { scope = "line" })
+	end,
+})
+vim.o.updatetime = 1000 -- Adjust delay (in milliseconds)
 
 -- Ensure lazy.nvim is installed
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -166,7 +189,7 @@ require("lazy").setup({
 					enforce_regular_tabs = false, -- Keeps tabs flexible
 					persist_buffer_sort = true, -- Keep sorting
 					separator_style = "thin", -- "thin", "slant", "padded_slant", etc.
-					diagnostics = "nvim_lsp", -- Show LSP diagnostics
+					diagnostics = "nvim_lsp || coc", -- Show LSP diagnostics
 					always_show_bufferline = true, -- Always visible
 					offsets = {
 						{
@@ -188,11 +211,11 @@ require("lazy").setup({
 					},
 					tab = {
 						fg = "#f5e0dc",
-						bg = "#313244",
+						bg = "#1e1e2e",
 					},
 					tab_selected = {
-						fg = "#cdd6f4", -- Active tab text
-						bg = "#181825", -- Active tab background
+						fg = "#cdd6f4",
+						bg = "#181825",
 					},
 					buffer = {
 						fg = "#f5e0dc",
@@ -200,7 +223,7 @@ require("lazy").setup({
 					},
 					buffer_visible = {
 						fg = "#f5e0dc",
-						bg = "#313244",
+						bg = "#1e1e2e",
 					},
 					buffer_selected = {
 						fg = "#cdd6f4", -- Selected buffer text
@@ -226,7 +249,50 @@ require("lazy").setup({
 					},
 					close_button_selected = {
 						fg = "#cdd6f4", -- Match selected buffer text color
-						bg = "#1e1e2e", -- Set close button background to #181825 for active buffer
+						bg = "#181825", -- Set close button background to #181825 for active buffer
+					},
+					-- Add these diagnostic highlights
+					warning_diagnostic = {
+						fg = "#f5e0dc", -- Text color for the warning
+						bg = "#1e1e2e", -- Match inactive buffer background
+					},
+					warning_diagnostic_selected = {
+						fg = "#cdd6f4", -- Match selected buffer text color
+						bg = "#181825", -- Match selected buffer background
+					},
+					warning_diagnostic_visible = {
+						fg = "#f5e0dc",
+						bg = "#1e1e2e", -- Match visible buffer background
+						italic = false,
+						bold = false,
+					},
+					-- Optional: Define error and info diagnostics if needed
+					error_diagnostic = {
+						fg = "#f5e0dc",
+						bg = "#1e1e2e",
+					},
+					error_diagnostic_selected = {
+						fg = "#cdd6f4",
+						bg = "#181825",
+					},
+					info_diagnostic = {
+						fg = "#f5e0dc",
+						bg = "#1e1e2e",
+					},
+					info_diagnostic_selected = {
+						fg = "#cdd6f4",
+						bg = "#181825",
+					},
+					modified = {
+						bg = "#1e1e2e", -- Replace with your desired background color (e.g., red)
+					},
+					-- For the selected (active) buffer with unsaved changes
+					modified_selected = {
+						bg = "#181825", -- Replace with your desired background color (e.g., green)
+					},
+					-- For visible but not selected buffers with unsaved changes
+					modified_visible = {
+						bg = "#1e1e2e", -- Replace with your desired background color (e.g., blue)
 					},
 				},
 			})
@@ -403,6 +469,10 @@ require("lazy").setup({
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<C-Space>"] = cmp.mapping.complete(),
 					["<C-e>"] = cmp.mapping.abort(),
+					["<CR>"] = cmp.mapping.confirm({
+						select = true, -- Confirms selection even if none is explicitly chosen
+						behavior = cmp.ConfirmBehavior.Replace, -- Prevents new line
+					}),
 				},
 				sources = {
 					{ name = "nvim_lsp" },
