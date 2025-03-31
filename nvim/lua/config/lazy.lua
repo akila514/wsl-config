@@ -3,6 +3,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.o.number = true
 vim.opt.termguicolors = true
+vim.opt.clipboard = "unnamedplus"
 
 vim.diagnostic.config({
 	virtual_text = false,
@@ -202,97 +203,284 @@ require("lazy").setup({
 				},
 				highlights = {
 					fill = {
-						fg = "#f5e0dc", -- Matches lualine’s c.fg
-						bg = "#181825", -- Matches lualine’s c.bg
+						fg = "#6C7086", -- Overlay0
+						bg = "#181825", -- Base
 					},
 					background = {
-						fg = "#f5e0dc", -- Inactive tab text
-						bg = "#1e1e2e", -- Inactive tab background
+						fg = "#7F849C", -- Overlay1
+						bg = "#181825", -- Mantle
 					},
 					tab = {
-						fg = "#f5e0dc",
-						bg = "#1e1e2e",
+						fg = "#CDD6F4", -- Text
+						bg = "#181825", -- Mantle
 					},
 					tab_selected = {
-						fg = "#cdd6f4",
-						bg = "#181825",
+						fg = "#CDD6F4", -- Text
+						bg = "#313244", -- Surface0
 					},
-					buffer = {
-						fg = "#f5e0dc",
-						bg = "#1e1e2e",
+					tab_separator = {
+						fg = "#45475A", -- Surface1
+						bg = "#181825", -- Mantle
 					},
-					buffer_visible = {
-						fg = "#f5e0dc",
-						bg = "#1e1e2e",
+					tab_separator_selected = {
+						fg = "#45475A", -- Surface1
+						bg = "#313244", -- Surface0
+						sp = "#45475A", -- Surface1
 					},
-					buffer_selected = {
-						fg = "#cdd6f4", -- Selected buffer text
-						bg = "#181825", -- Selected buffer background
-						bold = true,
-						italic = false,
-					},
-					separator = {
-						fg = "#181825",
-						bg = "#1e1e2e",
-					},
-					separator_selected = {
-						fg = "#181825",
-						bg = "#181825",
+					tab_close = {
+						fg = "#F38BA8", -- Red
+						bg = "#181825", -- Mantle
 					},
 					close_button = {
-						fg = "#f5e0dc", -- Keep text color consistent with inactive buffers
-						bg = "#1e1e2e", -- Set close button background to #181825
+						fg = "#F38BA8", -- Red
+						bg = "#181825", -- Mantle
 					},
 					close_button_visible = {
-						fg = "#f5e0dc",
-						bg = "#1e1e2e", -- Consistent background for visible buffers
+						fg = "#F38BA8", -- Red
+						bg = "#313244", -- Surface0
 					},
 					close_button_selected = {
-						fg = "#cdd6f4", -- Match selected buffer text color
-						bg = "#181825", -- Set close button background to #181825 for active buffer
+						fg = "#F38BA8", -- Red
+						bg = "#45475A", -- Surface1
 					},
-					-- Add these diagnostic highlights
-					warning_diagnostic = {
-						fg = "#f5e0dc", -- Text color for the warning
-						bg = "#1e1e2e", -- Match inactive buffer background
+					buffer_visible = {
+						fg = "#BAC2DE", -- Subtext1
+						bg = "#313244", -- Surface0
 					},
-					warning_diagnostic_selected = {
-						fg = "#cdd6f4", -- Match selected buffer text color
-						bg = "#181825", -- Match selected buffer background
+					buffer_selected = {
+						fg = "#CDD6F4", -- Text
+						bg = "#45475A", -- Surface1
+						bold = true,
+						italic = true,
 					},
-					warning_diagnostic_visible = {
-						fg = "#f5e0dc",
-						bg = "#1e1e2e", -- Match visible buffer background
-						italic = false,
-						bold = false,
+					numbers = {
+						fg = "#6C7086", -- Overlay0
+						bg = "#181825", -- Mantle
 					},
-					-- Optional: Define error and info diagnostics if needed
-					error_diagnostic = {
-						fg = "#f5e0dc",
-						bg = "#1e1e2e",
+					numbers_visible = {
+						fg = "#7F849C", -- Overlay1
+						bg = "#313244", -- Surface0
 					},
-					error_diagnostic_selected = {
-						fg = "#cdd6f4",
-						bg = "#181825",
+					numbers_selected = {
+						fg = "#CDD6F4", -- Text
+						bg = "#45475A", -- Surface1
+						bold = true,
+						italic = true,
+					},
+					diagnostic = {
+						fg = "#F38BA8", -- Red
+						bg = "#181825", -- Mantle
+					},
+					diagnostic_visible = {
+						fg = "#F38BA8", -- Red
+						bg = "#313244", -- Surface0
+					},
+					diagnostic_selected = {
+						fg = "#F38BA8", -- Red
+						bg = "#45475A", -- Surface1
+						bold = true,
+						italic = true,
+					},
+					hint = {
+						fg = "#A6E3A1", -- Green
+						sp = "#A6E3A1", -- Green
+						bg = "#181825", -- Mantle
+					},
+					hint_visible = {
+						fg = "#A6E3A1", -- Green
+						bg = "#313244", -- Surface0
+					},
+					hint_selected = {
+						fg = "#A6E3A1", -- Green
+						bg = "#45475A", -- Surface1
+						sp = "#A6E3A1", -- Green
+						bold = true,
+						italic = true,
+					},
+					hint_diagnostic = {
+						fg = "#A6E3A1", -- Green
+						sp = "#A6E3A1", -- Green
+						bg = "#181825", -- Mantle
+					},
+					hint_diagnostic_visible = {
+						fg = "#A6E3A1", -- Green
+						bg = "#313244", -- Surface0
+					},
+					hint_diagnostic_selected = {
+						fg = "#A6E3A1", -- Green
+						bg = "#45475A", -- Surface1
+						sp = "#A6E3A1", -- Green
+						bold = true,
+						italic = true,
+					},
+					info = {
+						fg = "#89B4FA", -- Blue
+						sp = "#89B4FA", -- Blue
+						bg = "#181825", -- Mantle
+					},
+					info_visible = {
+						fg = "#89B4FA", -- Blue
+						bg = "#313244", -- Surface0
+					},
+					info_selected = {
+						fg = "#89B4FA", -- Blue
+						bg = "#45475A", -- Surface1
+						sp = "#89B4FA", -- Blue
+						bold = true,
+						italic = true,
 					},
 					info_diagnostic = {
-						fg = "#f5e0dc",
-						bg = "#1e1e2e",
+						fg = "#89B4FA", -- Blue
+						sp = "#89B4FA", -- Blue
+						bg = "#181825", -- Mantle
+					},
+					info_diagnostic_visible = {
+						fg = "#89B4FA", -- Blue
+						bg = "#313244", -- Surface0
 					},
 					info_diagnostic_selected = {
-						fg = "#cdd6f4",
-						bg = "#181825",
+						fg = "#89B4FA", -- Blue
+						bg = "#45475A", -- Surface1
+						sp = "#89B4FA", -- Blue
+						bold = true,
+						italic = true,
+					},
+					warning = {
+						fg = "#F9E2AF", -- Yellow
+						sp = "#F9E2AF", -- Yellow
+						bg = "#181825", -- Mantle
+					},
+					warning_visible = {
+						fg = "#F9E2AF", -- Yellow
+						bg = "#313244", -- Surface0
+					},
+					warning_selected = {
+						fg = "#F9E2AF", -- Yellow
+						bg = "#45475A", -- Surface1
+						sp = "#F9E2AF", -- Yellow
+						bold = true,
+						italic = true,
+					},
+					warning_diagnostic = {
+						fg = "#F9E2AF", -- Yellow
+						sp = "#F9E2AF", -- Yellow
+						bg = "#181825", -- Mantle
+					},
+					warning_diagnostic_visible = {
+						fg = "#F9E2AF", -- Yellow
+						bg = "#313244", -- Surface0
+					},
+					warning_diagnostic_selected = {
+						fg = "#F9E2AF", -- Yellow
+						bg = "#45475A", -- Surface1
+						sp = "#F9E2AF", -- Yellow
+						bold = true,
+						italic = true,
+					},
+					error = {
+						fg = "#F38BA8", -- Red
+						bg = "#181825", -- Mantle
+						sp = "#F38BA8", -- Red
+					},
+					error_visible = {
+						fg = "#F38BA8", -- Red
+						bg = "#313244", -- Surface0
+					},
+					error_selected = {
+						fg = "#F38BA8", -- Red
+						bg = "#45475A", -- Surface1
+						sp = "#F38BA8", -- Red
+						bold = true,
+						italic = true,
+					},
+					error_diagnostic = {
+						fg = "#F38BA8", -- Red
+						bg = "#181825", -- Mantle
+						sp = "#F38BA8", -- Red
+					},
+					error_diagnostic_visible = {
+						fg = "#F38BA8", -- Red
+						bg = "#313244", -- Surface0
+					},
+					error_diagnostic_selected = {
+						fg = "#F38BA8", -- Red
+						bg = "#45475A", -- Surface1
+						sp = "#F38BA8", -- Red
+						bold = true,
+						italic = true,
 					},
 					modified = {
-						bg = "#1e1e2e", -- Replace with your desired background color (e.g., red)
+						fg = "#FAB387", -- Peach
+						bg = "#181825", -- Mantle
 					},
-					-- For the selected (active) buffer with unsaved changes
-					modified_selected = {
-						bg = "#181825", -- Replace with your desired background color (e.g., green)
-					},
-					-- For visible but not selected buffers with unsaved changes
 					modified_visible = {
-						bg = "#1e1e2e", -- Replace with your desired background color (e.g., blue)
+						fg = "#FAB387", -- Peach
+						bg = "#313244", -- Surface0
+					},
+					modified_selected = {
+						fg = "#FAB387", -- Peach
+						bg = "#45475A", -- Surface1
+					},
+					duplicate_selected = {
+						fg = "#9399B2", -- Overlay2
+						bg = "#45475A", -- Surface1
+						italic = true,
+					},
+					duplicate_visible = {
+						fg = "#9399B2", -- Overlay2
+						bg = "#313244", -- Surface0
+						italic = true,
+					},
+					duplicate = {
+						fg = "#9399B2", -- Overlay2
+						bg = "#181825", -- Mantle
+						italic = true,
+					},
+					separator_selected = {
+						fg = "#585B70", -- Surface2
+						bg = "#45475A", -- Surface1
+					},
+					separator_visible = {
+						fg = "#585B70", -- Surface2
+						bg = "#313244", -- Surface0
+					},
+					separator = {
+						fg = "#585B70", -- Surface2
+						bg = "#181825", -- Mantle
+					},
+					indicator_visible = {
+						fg = "#CBA6F7", -- Mauve
+						bg = "#313244", -- Surface0
+					},
+					indicator_selected = {
+						fg = "#CBA6F7", -- Mauve
+						bg = "#45475A", -- Surface1
+					},
+					pick_selected = {
+						fg = "#F5C2E7", -- Pink
+						bg = "#45475A", -- Surface1
+						bold = true,
+						italic = true,
+					},
+					pick_visible = {
+						fg = "#F5C2E7", -- Pink
+						bg = "#313244", -- Surface0
+						bold = true,
+						italic = true,
+					},
+					pick = {
+						fg = "#F5C2E7", -- Pink
+						bg = "#181825", -- Mantle
+						bold = true,
+						italic = true,
+					},
+					offset_separator = {
+						fg = "#585B70", -- Surface2
+						bg = "#181825", -- Mantle
+					},
+					trunc_marker = {
+						fg = "#6C7086", -- Overlay0
+						bg = "#181825", -- Mantle
 					},
 				},
 			})
