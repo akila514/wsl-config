@@ -24,3 +24,6 @@ vim.keymap.set("n", "<leader>td", ":vsplit | term<CR>", { desc = "Vertical Split
 vim.api.nvim_set_keymap("n", "<Leader>Q", ":%bd|e#|bd#<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap("n", "<Leader>q", ":bdelete<CR>", { noremap = true, silent = true }) -- Close buffer
+
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Search project with Telescope" })
